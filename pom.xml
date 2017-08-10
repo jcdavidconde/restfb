@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.restfb</groupId>
+  <groupId>com.navent</groupId>
   <artifactId>restfb</artifactId>
   <packaging>jar</packaging>
   <name>RestFB</name>
@@ -24,16 +24,18 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+  
+  <distributionManagement>
+   <repository>
+      <id>nexus-navent</id>
+      <url>http://nexus.navent.biz:8081/nexus/content/repositories/releases/</url>
+   </repository>
+</distributionManagement>
 
   <scm>
-    <connection>scm:git:ssh://github.com/restfb/restfb.git</connection>
-    <url>http://github.com/restfb/restfb</url>
+    <connection>scm:git:ssh://github.com/jcdavidconde/restfb.git</connection>
+    <url>http://github.com/jcdavidconde/restfb</url>
   </scm>
-
-  <ciManagement>
-    <url>https://travis-ci.org/restfb/restfb</url>
-    <system>Travis</system>
-  </ciManagement>
 
   <developers>
     <developer>
@@ -181,6 +183,16 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+	   <groupId>org.apache.maven.plugins</groupId>
+	   <artifactId>maven-release-plugin</artifactId>
+	   <version>2.4.2</version>
+	   <configuration>
+	      <tagNameFormat>v@{project.version}</tagNameFormat>
+	      <autoVersionSubmodules>true</autoVersionSubmodules>
+	      <releaseProfiles>releases</releaseProfiles>
+	   </configuration>
+	</plugin>
     </plugins>
   </build>
   <pluginRepositories>
@@ -205,4 +217,33 @@
       <url>http://repository.springsource.com/maven/bundles/external</url>
     </pluginRepository>
   </pluginRepositories>
+  
+  <profiles>
+   <profile>
+      <id>releases</id>
+      <build>
+         <plugins>
+            <plugin>
+               <groupId>org.sonatype.plugins</groupId>
+               <artifactId>nexus-staging-maven-plugin</artifactId>
+               <version>1.5.1</version>
+               <executions>
+                  <execution>
+                     <id>default-deploy</id>
+                     <phase>deploy</phase>
+                     <goals>
+                        <goal>deploy</goal>
+                     </goals>
+                  </execution>
+               </executions>
+               <configuration>
+                  <serverId>nexus-navent</serverId>
+                  <nexusUrl>http://nexus.navent.biz:8081/nexus/content/repositories/releases/</nexusUrl>
+                  <skipStaging>true</skipStaging>
+               </configuration>
+            </plugin>
+         </plugins>
+      </build>
+   </profile>
+</profiles>
 </project>
